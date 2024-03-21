@@ -1,7 +1,8 @@
 package br.com.mms.apirestandtest.resources;
 
-import br.com.mms.apirestandtest.domain.User;
+import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserResources {
 
     private UserService userService;
+    private ModelMapper mapper;
 
-    public UserResources(UserService userService) {
+    public UserResources(UserService userService, ModelMapper mapper) {
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Integer id){
-        return ResponseEntity.ok().body(userService.findById(id));
+    public ResponseEntity<UserDTO> findById(@PathVariable Integer id){
+        return ResponseEntity.ok().body(mapper.map(userService.findById(id), UserDTO.class));
     }
 }
