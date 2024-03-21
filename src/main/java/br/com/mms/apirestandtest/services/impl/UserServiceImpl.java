@@ -3,6 +3,7 @@ package br.com.mms.apirestandtest.services.impl;
 import br.com.mms.apirestandtest.domain.User;
 import br.com.mms.apirestandtest.repositories.UserRepository;
 import br.com.mms.apirestandtest.services.UserService;
+import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +20,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> user = repository.findById(id);
-        return user.orElse(null);
+        return user.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!"));
     }
 }
