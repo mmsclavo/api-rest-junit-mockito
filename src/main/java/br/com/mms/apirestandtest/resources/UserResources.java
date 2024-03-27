@@ -3,6 +3,7 @@ package br.com.mms.apirestandtest.resources;
 import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -37,6 +38,17 @@ public class UserResources {
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO dto) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userService.create(dto).getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.map(userService.update(id, dto), UserDTO.class));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

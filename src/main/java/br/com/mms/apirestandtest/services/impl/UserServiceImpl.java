@@ -44,4 +44,28 @@ public class UserServiceImpl implements UserService {
         return repository.save(mapper.map(dto, User.class));
     }
 
+    @Override
+    public User update(Integer id, UserDTO dto) {
+        Optional<User> userEncontrado = repository.findById(id);
+        if(!userEncontrado.isPresent()){
+            throw new ObjectNotFoundException("Objeto não encontrado!");
+        }
+        Optional<User> userExistente = repository.findByEmail(dto.getEmail());
+        if(userExistente.isPresent() && !userExistente.get().getId().equals(id)) {
+            throw new DataIntegratyViolationException(EMAIL_DUPLICADO);
+        }
+
+        dto.setId(id);
+        User userAtualizado = mapper.map(dto, User.class);
+        return repository.save(userAtualizado);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Optional<User> userEncontrado = repository.findById(id);
+        if(!userEncontrado.isPresent()){
+            throw new ObjectNotFoundException("Objeto não encontrado!");
+        }
+        repository.deleteById(id);
+    }
 }
