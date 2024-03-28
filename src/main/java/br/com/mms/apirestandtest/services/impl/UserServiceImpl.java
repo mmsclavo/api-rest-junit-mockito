@@ -38,9 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserDTO dto) {
         Optional<User> userExistente = repository.findByEmail(dto.getEmail());
-        if(userExistente.isPresent()){
-            throw new DataIntegratyViolationException(EMAIL_DUPLICADO);
-        }
+        userExistente.orElseThrow(() -> new DataIntegratyViolationException(EMAIL_DUPLICADO));
         return repository.save(mapper.map(dto, User.class));
     }
 
