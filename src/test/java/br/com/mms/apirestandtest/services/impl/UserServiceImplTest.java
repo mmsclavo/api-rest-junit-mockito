@@ -3,6 +3,7 @@ package br.com.mms.apirestandtest.services.impl;
 import br.com.mms.apirestandtest.domain.User;
 import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.repositories.UserRepository;
+import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,6 +52,18 @@ class UserServiceImplTest {
         assertEquals(ID, response.getId());
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO));
+
+        try {
+            repository.findById(ID);
+        } catch (Exception ex) {
+            assertEquals(ex.getClass(), ObjectNotFoundException.class);
+            assertEquals(ex.getMessage(), UserServiceImpl.OBJETO_NAO_ENCONTRADO);
+        }
     }
 
     @Test

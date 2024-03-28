@@ -16,6 +16,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String EMAIL_DUPLICADO = "Email já existe na base de usuários!";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado!";
     private UserRepository repository;
     private ModelMapper mapper;
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> user = repository.findById(id);
-        return user.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!"));
+        return user.orElseThrow(() -> new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public User update(Integer id, UserDTO dto) {
         Optional<User> userEncontrado = repository.findById(id);
         if(!userEncontrado.isPresent()){
-            throw new ObjectNotFoundException("Objeto não encontrado!");
+            throw new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO);
         }
         Optional<User> userExistente = repository.findByEmail(dto.getEmail());
         if(userExistente.isPresent() && !userExistente.get().getId().equals(id)) {
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         Optional<User> userEncontrado = repository.findById(id);
         if(!userEncontrado.isPresent()){
-            throw new ObjectNotFoundException("Objeto não encontrado!");
+            throw new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO);
         }
         repository.deleteById(id);
     }
