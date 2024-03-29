@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final String EMAIL_DUPLICADO = "Email já existe na base de usuários!";
+    public static final String EMAIL_DUPLICADO = "Email já existe na base de usuários!";
     public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado!";
     private UserRepository repository;
     private ModelMapper mapper;

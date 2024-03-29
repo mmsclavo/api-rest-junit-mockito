@@ -3,6 +3,7 @@ package br.com.mms.apirestandtest.services.impl;
 import br.com.mms.apirestandtest.domain.User;
 import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.repositories.UserRepository;
+import br.com.mms.apirestandtest.services.exceptions.DataIntegratyViolationException;
 import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +63,7 @@ class UserServiceImplTest {
         when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO));
 
         try {
-            repository.findById(ID);
+            service.findById(ID);
         } catch (Exception ex) {
             assertEquals(ex.getClass(), ObjectNotFoundException.class);
             assertEquals(ex.getMessage(), UserServiceImpl.OBJETO_NAO_ENCONTRADO);
@@ -70,7 +72,7 @@ class UserServiceImplTest {
 
     @Test
     void whenFindAllThenReturnAnListOfUsers() {
-        when(repository.findAll()).thenReturn(List.of(user));
+        when(service.findAll()).thenReturn(List.of(user));
 
         List<User> response = repository.findAll();
 
@@ -97,6 +99,18 @@ class UserServiceImplTest {
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenCreateThenReturnAnDataIntegrityViolationException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            User response = service.create(userDTO);
+        } catch(Exception ex) {
+            assertEquals(ex.getClass(), DataIntegratyViolationException.class);
+            assertEquals(ex.getMessage(), UserServiceImpl.EMAIL_DUPLICADO);
+        }
     }
 
     @Test
