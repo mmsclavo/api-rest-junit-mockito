@@ -15,12 +15,10 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserServiceImplTest {
 
@@ -105,20 +103,56 @@ class UserServiceImplTest {
     void whenCreateThenReturnAnDataIntegrityViolationException() {
         when(repository.findByEmail(anyString())).thenReturn(optionalUser);
 
+        String exMessage = null;
         try {
             User response = service.create(userDTO);
         } catch(Exception ex) {
+            exMessage = ex.getMessage();
             assertEquals(ex.getClass(), DataIntegratyViolationException.class);
             assertEquals(ex.getMessage(), UserServiceImpl.EMAIL_DUPLICADO);
         }
+        assertNotNull(exMessage);
     }
 
     @Test
-    void update() {
+    void whenUpdateThenReturnSuccess() {
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+        when(repository.save(any())).thenReturn(user);
+
+        User response = service.update(ID, userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
-    void delete() {
+    void whenUpdateThenReturnAnDataIntegrityViolationException() {
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        String exMessage = null;
+        try {
+            User response = service.update(2, userDTO);
+        } catch(Exception ex) {
+            exMessage = ex.getMessage();
+            assertEquals(ex.getClass(), DataIntegratyViolationException.class);
+            assertEquals(ex.getMessage(), UserServiceImpl.EMAIL_DUPLICADO);
+        }
+        assertNotNull(exMessage);
+    }
+
+    @Test
+    void deleteWithSuccess() {
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        doNothing().when(repository).deleteById(anyInt());
+        service.delete(ID);
+        verify(repository, times(1)).deleteById(anyInt());
     }
 
     private void startUser() {
