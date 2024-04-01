@@ -3,7 +3,7 @@ package br.com.mms.apirestandtest.services.impl;
 import br.com.mms.apirestandtest.domain.User;
 import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.repositories.UserRepository;
-import br.com.mms.apirestandtest.services.exceptions.DataIntegratyViolationException;
+import br.com.mms.apirestandtest.services.exceptions.DataIntegrityViolationException;
 import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -108,7 +108,7 @@ class UserServiceImplTest {
             User response = service.create(userDTO);
         } catch(Exception ex) {
             exMessage = ex.getMessage();
-            assertEquals(ex.getClass(), DataIntegratyViolationException.class);
+            assertEquals(ex.getClass(), DataIntegrityViolationException.class);
             assertEquals(ex.getMessage(), UserServiceImpl.EMAIL_DUPLICADO);
         }
         assertNotNull(exMessage);
@@ -156,7 +156,7 @@ class UserServiceImplTest {
             User response = service.update(2, userDTO);
         } catch(Exception ex) {
             exMessage = ex.getMessage();
-            assertEquals(ex.getClass(), DataIntegratyViolationException.class);
+            assertEquals(ex.getClass(), DataIntegrityViolationException.class);
             assertEquals(ex.getMessage(), UserServiceImpl.EMAIL_DUPLICADO);
         }
         assertNotNull(exMessage);

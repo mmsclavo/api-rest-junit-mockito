@@ -4,7 +4,7 @@ import br.com.mms.apirestandtest.domain.User;
 import br.com.mms.apirestandtest.domain.dto.UserDTO;
 import br.com.mms.apirestandtest.repositories.UserRepository;
 import br.com.mms.apirestandtest.services.UserService;
-import br.com.mms.apirestandtest.services.exceptions.DataIntegratyViolationException;
+import br.com.mms.apirestandtest.services.exceptions.DataIntegrityViolationException;
 import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public User create(UserDTO dto) {
         Optional<User> userExistente = repository.findByEmail(dto.getEmail());
         if(userExistente.isPresent()){
-            throw new DataIntegratyViolationException(EMAIL_DUPLICADO);
+            throw new DataIntegrityViolationException(EMAIL_DUPLICADO);
         }
         return repository.save(mapper.map(dto, User.class));
     }
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
         Optional<User> userExistente = repository.findByEmail(dto.getEmail());
         if(userExistente.isPresent() && !userExistente.get().getId().equals(id)) {
-            throw new DataIntegratyViolationException(EMAIL_DUPLICADO);
+            throw new DataIntegrityViolationException(EMAIL_DUPLICADO);
         }
 
         dto.setId(id);

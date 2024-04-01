@@ -1,5 +1,6 @@
 package br.com.mms.apirestandtest.resources.exceptions;
 
+import br.com.mms.apirestandtest.services.exceptions.DataIntegrityViolationException;
 import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import br.com.mms.apirestandtest.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,7 @@ class ResourceExceptionHandlerTest {
 
     @Test
     void whenObjectNotFoundException() {
-        ResponseEntity<StandardError> response =exceptionHandler.objectNotFound(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO), new MockHttpServletRequest());
+        ResponseEntity<StandardError> response = exceptionHandler.objectNotFound(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO), new MockHttpServletRequest());
 
         assertNotNull(response);
         assertNotNull(response.getBody());
@@ -36,7 +37,16 @@ class ResourceExceptionHandlerTest {
     }
 
     @Test
-    void dataIntegratyViolation() {
+    void dataIntegrityViolation() {
+        ResponseEntity<StandardError> response = exceptionHandler.dataIntegrityViolation(new DataIntegrityViolationException(UserServiceImpl.EMAIL_DUPLICADO), new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(response.getClass(), ResponseEntity.class);
+        assertEquals(response.getBody().getClass(), StandardError.class);
+        assertEquals(response.getBody().getError(), UserServiceImpl.EMAIL_DUPLICADO);
+        assertEquals(response.getBody().getStatus(), HttpStatus.BAD_REQUEST.value());
     }
 
     @Test

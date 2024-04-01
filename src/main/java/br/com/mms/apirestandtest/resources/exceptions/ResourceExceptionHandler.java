@@ -1,6 +1,6 @@
 package br.com.mms.apirestandtest.resources.exceptions;
 
-import br.com.mms.apirestandtest.services.exceptions.DataIntegratyViolationException;
+import br.com.mms.apirestandtest.services.exceptions.DataIntegrityViolationException;
 import br.com.mms.apirestandtest.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -25,8 +25,8 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(DataIntegratyViolationException.class)
-    public ResponseEntity<StandardError> dataIntegratyViolation(DataIntegratyViolationException ex, HttpServletRequest request) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
         logger.error(error.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
