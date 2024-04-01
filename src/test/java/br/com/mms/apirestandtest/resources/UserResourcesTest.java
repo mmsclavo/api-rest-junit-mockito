@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 class UserResourcesTest {
 
     public static final Integer ID = 1;
@@ -83,7 +85,14 @@ class UserResourcesTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnCreated() {
+        when(service.create(any())).thenReturn(user);
+
+        ResponseEntity<UserDTO> response = resources.create(userDTO);
+
+        assertEquals(response.getClass(), ResponseEntity.class);
+        assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        assertNotNull(response.getHeaders().get("Location"));
     }
 
     @Test
