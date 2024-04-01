@@ -50,6 +50,15 @@ class ResourceExceptionHandlerTest {
     }
 
     @Test
-    void genericError() {
+    void whenGenericError() {
+        ResponseEntity<StandardError> response = exceptionHandler.genericError(new Exception(ResourceExceptionHandler.GENERIC_ERROR), new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+        assertEquals(response.getClass(), ResponseEntity.class);
+        assertEquals(response.getBody().getClass(), StandardError.class);
+        assertEquals(response.getBody().getError(), ResourceExceptionHandler.GENERIC_ERROR);
+        assertEquals(response.getBody().getStatus(), HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    private static final String GENERIC_ERROR = "Ocorreu um erro inesperado!";
+    public static final String GENERIC_ERROR = "Ocorreu um erro inesperado!";
     private Logger logger = LoggerFactory.getLogger(ResourceExceptionHandler.class);
 
     @ExceptionHandler(ObjectNotFoundException.class)
