@@ -132,6 +132,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    void whenUpdateThenReturnAnObjectNotFoundException() {
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
+
+        String exMessage = null;
+        try {
+            User response = service.update(ID, userDTO);
+        } catch(Exception ex) {
+            exMessage = ex.getMessage();
+            assertEquals(ex.getClass(), ObjectNotFoundException.class);
+            assertEquals(ex.getMessage(), UserServiceImpl.OBJETO_NAO_ENCONTRADO);
+        }
+        assertNotNull(exMessage);
+    }
+
+    @Test
     void whenUpdateThenReturnAnDataIntegrityViolationException() {
         when(repository.findById(anyInt())).thenReturn(optionalUser);
         when(repository.findByEmail(anyString())).thenReturn(optionalUser);
@@ -157,8 +172,8 @@ class UserServiceImplTest {
 
     @Test
     void deleteWithObjectNotFoundException() {
-        when(repository.findById(anyInt()))
-                .thenThrow(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO));
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(null));
+//                .thenThrow(new ObjectNotFoundException(UserServiceImpl.OBJETO_NAO_ENCONTRADO));
 
         String exMessage = null;
         try {
